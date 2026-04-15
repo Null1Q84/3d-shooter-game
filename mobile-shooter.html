@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mobile 3D Shooter Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            touch-action: manipulation;
+        }
+        
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        #game-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-bottom: 10px;
+        }
+        
+        #controls {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            max-width: 90%;
+            width: 90%;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-title {
+            color: #ff9900;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff9900, #ffcc00);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            margin: 8px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 90%;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+        
+        button:hover, button:active {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        .stats {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .stat-item {
+            background: rgba(30, 30, 60, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        canvas {
+            border: 3px solid #555;
+            background: #222;
+            border-radius: 10px;
+            margin: 20px;
+            max-width: 95%;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .instructions {
+            background: rgba(30, 30, 60, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-width: 90%;
+            width: 90%;
+        }
+        
+        .info-text {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .screen-size {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            #game-title {
+                font-size: 20px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            canvas {
+                width: 95%;
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            canvas {
+                height: 250px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="header">
+            <h1 id="game-title">Mobile 3D Shooter</h1>
+            <p class="info-text">Touch-friendly shooting game prototype</p>
+        </div>
+        
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+        
+        <div id="controls">
+            <div class="control-group">
+                <div class="control-title">Movement Controls</div>
+                <button onclick="move('forward')">Forward</button>
+                <button onclick="move('backward')">Backward</button>
+                <button onclick="move('left')">Left</button>
+                <button onclick="move('right')">Right</button>
+                <button onclick="jump()">Jump</button>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">Action Controls</31iv>
+                <button onclick="shoot()">Shoot</button>
+                <button onclick="switchWeapon(1)">Weapon 1</button>
+                <button onclick="switchWeapon(2)">Weapon 2</button>
+                <button onclick="switchWeapon(3)">Weapon 3</button>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">Game Controls</div>
+                <button onclick="startGame()">Start Game</button>
+                <button onclick="pauseGame()">Pause</button>
+                <button onclick="resetGame()">Reset</button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <strong>Score:</strong>
+                <span id="score">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Health:</strong>
+                <span id="health">100</span>
+            </div>
+            <div class="stat-item">
+                <strong>Enemies:</strong>
+                <span id="enemies">5</span>
+            </div>
+            <div class="stat-item">
+                <strong>Ammo:</strong>
+                <span id="ammo">30</span>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <p class="info-text">1. Click Start Game to begin</p>
+            <p class="info-text">2. Use movement buttons to move</p>
+            <p class="info-text">3. Use Shoot button to attack</p>
+            <p class="info-text">4. Switch weapons to try different types</p>
+            <p class="info-text">5. Defeat all enemies to win!</p>
+        </div>
+        
+        <div class="screen-size">
+            Screen size: <span id="screenWidth">0</span>x<span id="screenHeight">0</span>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态变量
+        let gameStarted = false;
+        let score = 0;
+        let health = 100;
+        let enemies = 5;
+        let ammo = 30;
+        let playerX = 100;
+        let playerY = 200;
+        let enemyX = 400;
+        let enemyY = 200;
+        let bullets = [];
+        let gameInterval;
+        
+        // Canvas绘图
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 更新屏幕尺寸显示
+        function updateScreenSize() {
+            document.getElementById('screenWidth').textContent = window.innerWidth;
+            document.getElementById('screenHeight').textContent = window.innerHeight;
+        }
+        
+        updateScreenSize();
+        window.addEventListener('resize', updateScreenSize);
+        
+        function startGame() {
+            gameStarted = true;
+            score = 0;
+            health = 100;
+            enemies = 5;
+            ammo = 30;
+            bullets = [];
+            
+            updateStats();
+            
+            // 清除Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 开始游戏循环
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, 100);
+        }
+        
+        function gameLoop() {
+            if (!gameStarted) return;
+            
+            // 绘制背景
+            ctx.fillStyle = '#222';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制玩家
+            ctx.fillStyle = '#00ff00';
+            ctx.fillRect(playerX, playerY, 20, 20);
+            
+            // 绘制敌人
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(enemyX, enemyY, 20, 20);
+            
+            // 敌人移动（向玩家靠近）
+            if (enemyX > playerX) enemyX -= 1;
+            if (enemyX < playerX) enemyX += 1;
+            if (enemyY > playerY) enemyY -= 1;
+            if (enemyY < playerY) enemyY += 1;
+            
+            // 绘制子弹
+            ctx.fillStyle = '#ffff00';
+            bullets.forEach(bullet => {
+                ctx.fillRect(bullet.x, bullet.y, 10, 10);
+                bullet.x += 5;
+                
+                // 子弹与敌人碰撞检测
+                if (Math.abs(bullet.x - enemyX) < 15 && Math.abs(bullet.y - enemyY) < 15) {
+                    enemies--;
+                    score += 100;
+                    bullets.splice(bullets.indexOf(bullet), 1);
+                    updateStats();
+                    
+                    // 敌人重新生成
+                    if (enemies > 0) {
+                        enemyX = Math.random() * canvas.width;
+                        enemyY = Math.random() * canvas.height;
+                    }
+                }
+                
+                // 子弹超出边界
+                if (bullet.x > canvas.width) {
+                    bullets.splice(bullets.indexOf(bullet), 1);
+                }
+            });
+            
+            // 敌人与玩家碰撞检测
+            if (Math.abs(enemyX - playerX) < 20 && Math.abs(enemyY - playerY) < 20) {
+                health -= 5;
+                if (health <= 0) {
+                    gameOver();
+                }
+                updateStats();
+            }
+            
+            // 游戏结束检查
+            if (health <= 0) {
+                gameOver();
+            }
+            
+            if (enemies <= 0) {
+                winGame();
+            }
+        }
+        
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('health').textContent = health;
+            document.getElementById('enemies').textContent = enemies;
+            document.getElementById('ammo').textContent = ammo;
+        }
+        
+        function move(direction) {
+            if (!gameStarted) return;
+            
+            switch(direction) {
+                case 'forward':
+                    playerY -= 20;
+                    break;
+                case 'backward':
+                    playerY += 20;
+                   2break;
+                case 'left':
+                    playerX -= 20;
+                    break;
+                case 'right':
+                    playerX += 20;
+                    break;
+            }
+            
+            // 边界检查
+            playerX = Math.max(0, Math.min(canvas.width - 20, playerX));
+            playerY = Math.max(0, Math.min(canvas.height - 20, playerY));
+        }
+        
+        function jump() {
+            if (!gameStarted) return;
+            playerY -= 30;
+            setTimeout(() => {
+                playerY += 30;
+            }, 500);
+        }
+        
+        function shoot() {
+            if (!gameStarted || ammo <= 0) return;
+            
+            ammo -= 1;
+            bullets.push({ x: playerX + 10, y: playerY });
+            updateStats();
+        }
+        
+        function switchWeapon(num) {
+            if (!gameStarted) return;
+            
+            console.log(`Switched to weapon ${num}`);
+            
+            // 武器切换效果
+            switch(num) {
+                case 1:
+                    ammo = 30;
+                    break;
+                case 2:
+                    ammo = 20;
+                    break;
+                case 3:
+                    ammo = 50;
+                    break;
+            }
+            updateStats();
+        }
+        
+        function pauseGame() {
+            gameStarted = false;
+            if (gameInterval) clearInterval(gameInterval);
+        }
+        
+        function resetGame() {
+            gameStarted = false;
+            if (gameInterval) clearInterval(gameInterval);
+            
+            score = 0;
+            health = 100;
+            enemies = 5;
+            ammo = 30;
+            playerX = 100;
+            playerY = 200;
+            enemyX = 400;
+            enemyY = 200;
+            bullets = [];
+            
+            updateStats();
+            
+            ctx.fillStyle = '#222';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.font = '18px Arial';
+            ctx.fillText('Mobile Shooting Game', 100, 200);
+        }
+        
+        function gameOver() {
+            gameStarted = false;
+            if (gameInterval) clearInterval(gameInterval);
+            
+            ctx.fillStyle = '#ff0000';
+            ctx.font = '24px Arial';
+            ctx.fillText('Game Over!', 100, 200);
+        }
+        
+        function winGame() {
+            gameStarted = false;
+            if (gameInterval) clearInterval(gameInterval);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = '24px Arial';
+            ctx.fillText('Victory!', 100, 200);
+        }
+        
+        // 触摸事件支持
+        canvas.addEventListener('touchstart', function(e) {
+            if (!gameStarted) return;
+            
+            // 射击
+            shoot();
+        });
+        
+        // 初始化
+        ctx.fillStyle = '#222';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px Arial';
+        ctx.fillText('Touch-Friendly Mobile Game', 100, 200);
+    </script>
+</body>
+</html>
