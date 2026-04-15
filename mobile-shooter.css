@@ -1,0 +1,226 @@
+/* 手机游戏CSS优化 */
+.mobile-button {
+    width: 80px;
+    height: 80px;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.mobile-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.4);
+}
+
+.mobile-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 移动控制按钮 */
+.control-button {
+    background-color: #2196F3;
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    border-radius: 30px;
+}
+
+.action-button {
+    background-color: #f44336;
+    width: 70px;
+    height: 70px;
+    margin: 8px;
+    border-radius: 35px;
+}
+
+/* 游戏按钮 */
+.game-button {
+    background-color: #FF9800;
+    width: 90px;
+    height: 90px;
+    margin: 10px;
+    border-radius: 45px;
+}
+
+/* 触摸反馈 */
+.touch-feedback {
+    animation: pulse 0.1s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .mobile-button {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .control-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .action-button {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .game-button {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* 手机设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 触摸设备 */
+    .mobile-button {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* 游戏界面布局 */
+.mobile-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* 触摸手势 */
+.gesture-area {
+    width: 300px;
+    height: 300px;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 150px;
+    position: absolute;
+    touch-action: none;
+}
+
+/* 虚拟摇杆 */
+.virtual-joystick {
+    width: 120px;
+    height: 120px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 60px;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+
+.virtual-stick {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 25px;
+    position: absolute;
+    top: 35px;
+    left: 35px;
+}
+
+/* 射击按钮 */
+.shoot-button {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(255,0,0,0.5);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 武器切换 */
+.weapon-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.weapon-button {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 20px;
+    border: 2px solid white;
+}
+
+/* 状态显示 */
+.status-bar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.status-item {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+/* 健康指示器 */
+.health-bar {
+    width: 200px;
+    height: 20px;
+    background-color: rgba(255,0,0,0.5);
+    border-radius: 10px;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    overflow: hidden;
+}
+
+.health-value {
+    height: 100%;
+    background-color: green;
+    transition: width 0.3s;
+}
+
+/* 弹药指示器 */
+.ammo-counter {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    background-color: rgba(255,255,0,0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
