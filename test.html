@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D射击游戏测试</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(to bottom, #222, #444);
+            color: white;
+            text-align: center;
+        }
+        .test-container {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        .game-link {
+            background: orange;
+            color: black;
+            padding: 12px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+        }
+        .game-link:hover {
+            background: #ffa500;
+        }
+        .qr-section {
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        img {
+            width: 300px;
+            height: 300px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 3D射击游戏测试页面</h1>
+    <p>测试GitHub Pages部署和QR Code功能</p>
+    
+    <div class="test-container">
+        <h2>游戏链接</h2>
+        <a href="index.html" class="game-link">进入游戏 (简单版本)</a>
+        <a href="mobile-shooter.html" class="game-link">移动版本游戏</a>
+        <a href="QR-Code.html" class="game-link">QR Code页面</a>
+        
+        <h2>文档链接</h2>
+        <a href="README.md" class="game-link">README文档</a>
+        <a href="README-FULL.md" class="game-link">完整文档</a>
+        <a href="mobile-instructions.md" class="game-link">移动端说明</a>
+        
+        <div class="qr-section">
+            <h3>QR Code</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://Null1Q84.github.io/3d-shooter-game/" alt="QR Code">
+            <p>扫描二维码访问游戏</p>
+        </div>
+    </div>
+    
+    <script>
+        // 测试脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('测试页面加载成功');
+            
+            // 测试所有链接是否可用
+            const links = document.querySelectorAll('.game-link');
+            links.forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log(`点击链接: ${this.href}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
