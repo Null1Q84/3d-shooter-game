@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>3D射击游戏</title>
+    <style>
+        body {
+            background: #222;
+            color: white;
+            text-align: center;
+            font-family: Arial;
+        }
+        canvas {
+            background: #333;
+            border: 2px solid white;
+            width: 300px;
+            height: 300px;
+        }
+        button {
+            background: orange;
+            color: black;
+            padding: 12px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .stats {
+            margin: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 手机射击游戏</h1>
+    <canvas id="game"></canvas>
+    
+    <div class="controls">
+        <button onclick="move('up')">⬆️ 前进</button>
+        <button onclick="move('down')">⬇️ 后退</button>
+        <button onclick="move('left')">⬅️ 左转</button>
+        <button onclick="move('right')">➡️ 右转</button>
+        <button onclick="shoot()">🔫 射击</button>
+        <button onclick="start()">🚀 开始游戏</button>
+    </div>
+    
+    <div class="stats">
+        <div>🎯 分数: <span id="score">0</span></div>
+        <div>💓 生命: <span id="health">100</span></div>
+        <div>👾 敌人: <span id="enemies">5</span></div>
+        <div>🔫 弹药: <span id="ammo">30</span></div>
+    </div>
+    
+    <script>
+        let canvas = document.getElementById('game');
+        let ctx = canvas.getContext('2d');
+        
+        // 游戏状态
+        let score = 0;
+        let health = 100;
+        let enemies = 5;
+        let ammo = 30;
+        let gameStarted = false;
+        let playerX = 50, playerY = 150;
+        let enemyX = 200, enemyY = 150;
+        let bullets = [];
+        
+        function start() {
+            gameStarted = true;
+            score = 0; health = 100; enemies = 5; ammo = 30;
+            bullets = [];
+            updateStats();
+            ctx.clearRect(0,0,300,300);
+        }
+        
+        function gameLoop() {
+            if(!gameStarted) return;
+            
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0,0,300,300);
+            
+            ctx.fillStyle = 'green';
+            ctx.fillRect(playerX,playerY,20,20);
+            
+            ctx.fillStyle = 'red';
+            ctx.fillRect(enemyX,enemyY,20,20);
+            
+            ctx.fillStyle = 'yellow';
+            bullets.forEach(b => {
+                ctx.fillRect(b.x,b.y,8,8);
+                b.x += 5;
+                
+                if(Math.abs(b.x-enemyX)<15 && Math.abs(b.y-enemyY)<15) {
+                    enemies--;
+                    score += 100;
+                    bullets = bullets.filter(bullet => bullet !== b);
+                    updateStats();
+                    enemyX = Math.random()*250;
+                    enemyY = Math.random()*250;
+                }
+            });
+            
+            if(enemies <= 0) {
+                ctx.fillStyle = 'green';
+                ctx.font = '24px Arial';
+                ctx.fillText('胜利!', 120, 150);
+                gameStarted = false;
+            }
+            
+            updateStats();
+        }
+        
+        function move(dir) {
+            if(dir=='up') playerY-=20;
+            if(dir=='down') playerY+=20;
+            if(dir=='left') playerX-=20;
+            if(dir=='right') playerX+=20;
+            gameLoop();
+        }
+        
+        function shoot() {
+            if(!gameStarted || ammo<=0) return;
+            ammo--;
+            bullets.push({x:playerX+10,y:playerY});
+            updateStats();
+        }
+        
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('health').textContent = health;
+            document.getElementById('enemies').textContent = enemies;
+            document.getElementById('ammo').textContent = ammo;
+        }
+        
+        ctx.fillStyle = 'white';
+        ctx.font = '16px Arial';
+        ctx.fillText('点击开始游戏', 100, 150);
+    </script>
+</body>
+</html>
